@@ -19,7 +19,7 @@ class AppShellTest extends TestCase
         $response->assertOk();
         $response->assertSee('dir="rtl"', false);
         $response->assertSee('lang="fa"', false);
-        $response->assertSee('برنامه تمرین و تغذیه شخصی‌سازی‌شده', false);
+        $response->assertSee('برنامه شخصی تمرین و تغذیه', false);
         $response->assertSee('ثبت‌نام', false);
     }
 
@@ -32,7 +32,7 @@ class AppShellTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('onboarding.step1'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'member@example.com',
@@ -51,7 +51,7 @@ class AppShellTest extends TestCase
         $this->post('/login', [
             'email' => 'login@example.com',
             'password' => 'password',
-        ])->assertRedirect(route('dashboard'));
+        ])->assertRedirect(route('onboarding.step1'));
 
         $this->assertAuthenticatedAs($user);
 
@@ -60,7 +60,7 @@ class AppShellTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_authenticated_member_sees_onboarding_placeholder(): void
+    public function test_authenticated_member_without_onboarding_is_redirected(): void
     {
         $user = User::factory()->create([
             'onboarding_completed' => false,
@@ -68,8 +68,7 @@ class AppShellTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee('تکمیل onboarding', false);
+            ->assertRedirect(route('onboarding.step1'));
     }
 
     public function test_authenticated_member_is_redirected_from_home_to_dashboard(): void

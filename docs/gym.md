@@ -160,7 +160,7 @@ Avoid testing private helper methods; test observable program structure and memb
 
 ## Further Notes
 
-- Issue tracker is not yet configured via `/setup-matt-pocock-skills`; this spec is published locally at `.scratch/gym-mvp/spec.md`.
+- Issue tracker is not yet configured via `/setup-matt-pocock-skills`; this spec is published locally at `docs/gym.md`.
 - Repository currently contains only Cursor agent skills under `.cursor/skills/`—all application code is net-new.
 - Recommended admin seed credentials should be documented in README (not committed as production secrets).
 - Injury handling in v1 may be limited to storing the note; automated exercise exclusion rules can be incremental if time-constrained.

@@ -1,6 +1,6 @@
 # Gym MVP — Laravel App
 
-Persian RTL web application for a single gym: member registration, onboarding (upcoming), and personalized training/nutrition programs.
+Persian RTL web application for a single gym: member registration, four-step onboarding, rule-based program generation (training + nutrition), and admin catalog management.
 
 ## Requirements
 
@@ -9,11 +9,13 @@ Persian RTL web application for a single gym: member registration, onboarding (u
 - Node.js 20+ (or Node 18 with the pinned Vite 5 toolchain in `package.json`)
 - SQLite (file database for local development)
 
-Install the PHP SQLite extension on Ubuntu/Debian:
+Install the PHP SQLite extension on Ubuntu/Debian (recommended):
 
 ```bash
 sudo apt install php8.3-sqlite3
 ```
+
+If you cannot install system packages yet, this repo ships a local fallback under `.php-ext/` used by `./serve.sh` and `./scripts/php.sh`.
 
 ## Setup
 
@@ -25,10 +27,12 @@ touch database/database.sqlite
 php artisan migrate --seed
 npm install
 npm run build
-php artisan serve
+./serve.sh
 ```
 
-Open [http://localhost:8000](http://localhost:8000).
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+Use `./serve.sh` instead of `php artisan serve` when the system PHP SQLite extension is missing.
 
 ## Admin account
 
@@ -45,19 +49,24 @@ Run `php artisan db:seed` to create or update the admin user.
 ## Testing
 
 ```bash
+./scripts/php.sh vendor/bin/phpunit
+```
+
+Or, if system PHP has SQLite enabled:
+
+```bash
 php artisan test
 ```
 
-## Ticket 01 scope
+## Features
 
-- Laravel + Breeze (Blade) + SQLite
-- Persian RTL landing page with Vazirmatn font
-- Register / login / logout without email verification
-- `users.role` (`member` \| `admin`) and `users.onboarding_completed`
-- Seeded admin account
-- Member dashboard placeholder pointing to upcoming onboarding wizard
+- **Public:** Persian RTL landing page with FAQ chat widget
+- **Auth:** Breeze register / login / logout (email verification disabled)
+- **Onboarding:** Four-step wizard → automatic 4-week program generation
+- **Member area:** Dashboard, program view, fitness profile edit, program regeneration from current profile
+- **Admin:** CRUD for exercises and meals, read-only member list
+- **Program engine:** Split selection (Full Body / Upper-Lower / PPL+focus), equipment & level filtering, muscle-focus prioritization, Mifflin-St Jeor nutrition
 
 ## Project docs
 
-- Spec: `.scratch/gym-mvp/spec.md`
-- Tickets: `.scratch/gym-mvp/issues/`
+- Spec: [`docs/gym.md`](docs/gym.md)

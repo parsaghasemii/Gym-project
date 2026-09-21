@@ -1,3 +1,297 @@
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_UltraLight.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/iransans/IRANSansWeb_Bold.woff2') format('woff2');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply text-slate-800;
+        padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
+    select,
+    textarea {
+        @apply min-h-[44px] text-base sm:min-h-0 sm:text-sm;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-lg bg-gym-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-gym-500 focus:outline-none focus:ring-2 focus:ring-gym-500 focus:ring-offset-2;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-gym-300 hover:bg-gym-50 hover:text-gym-800 focus:outline-none focus:ring-2 focus:ring-gym-500 focus:ring-offset-2;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900;
+    }
+
+    .card {
+        @apply rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card;
+    }
+
+    .page-shell {
+        @apply min-h-screen bg-slate-50;
+    }
+
+    .site-header {
+        @apply sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md;
+    }
+
+    .site-header--scrolled {
+        @apply shadow-sm shadow-slate-200/60;
+    }
+
+    .site-header-inner {
+        @apply mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8;
+    }
+
+    .site-nav {
+        @apply hidden items-center gap-7 md:flex;
+    }
+
+    .site-nav-link {
+        @apply text-sm text-slate-600 transition hover:text-slate-900;
+    }
+
+    .site-nav-link--active {
+        @apply font-medium text-gym-600;
+    }
+
+    .site-nav-actions {
+        @apply flex items-center gap-3 sm:gap-4;
+    }
+
+    .site-nav-login {
+        @apply hidden text-sm text-slate-600 transition hover:text-slate-900 sm:inline;
+    }
+
+    .site-nav-cta {
+        @apply inline-flex items-center justify-center rounded-lg bg-gym-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-gym-500;
+    }
+
+    .site-nav-menu-btn {
+        @apply inline-flex items-center justify-center rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 md:hidden;
+    }
+
+    .site-mobile-nav {
+        @apply border-t border-slate-100 bg-white md:hidden;
+    }
+
+    .site-mobile-nav-link {
+        @apply block px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-slate-900;
+    }
+
+    .site-mobile-nav-link--active {
+        @apply font-medium text-gym-600;
+    }
+
+    .site-user-btn {
+        @apply inline-flex max-w-[10rem] items-center gap-2 text-sm text-slate-600 transition hover:text-slate-900;
+    }
+
+    .nav-link {
+        @apply text-sm text-slate-600 transition hover:text-slate-900;
+    }
+
+    .nav-link--active {
+        @apply font-medium text-gym-600;
+    }
+
+    .nav-link-mobile {
+        @apply block w-full px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-50 hover:text-slate-900;
+    }
+
+    .nav-link-mobile--active {
+        @apply font-medium text-gym-600;
+    }
+
+    .section-label {
+        @apply text-xs font-semibold uppercase tracking-wider text-gym-600;
+    }
+
+    .hero-feature-carousel {
+        @apply relative mx-auto h-[21rem] w-full max-w-[17rem] overflow-hidden touch-none select-none sm:h-[30rem] sm:max-w-none lg:h-[26rem] lg:mx-0;
+    }
+
+    .hero-feature-slide {
+        @apply absolute inset-x-0 top-1/2 card p-4 text-center sm:p-6 lg:text-start lg:flex lg:items-center lg:gap-4 transition-all duration-700 ease-in-out will-change-transform;
+    }
+
+    .hero-feature-slide h3 {
+        @apply text-sm sm:text-base;
+    }
+
+    .hero-feature-slide p {
+        @apply text-xs leading-5 sm:text-sm sm:leading-6;
+    }
+
+    .hero-feature-slide--active {
+        @apply border-slate-200/80 bg-white shadow-card;
+    }
+
+    .hero-feature-slide--inactive {
+        @apply border-slate-200/50 bg-slate-100/90 shadow-none grayscale;
+    }
+
+    .chat-widget-messages {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(16 185 129 / 0.35) transparent;
+    }
+
+    .chat-widget-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-widget-messages::-webkit-scrollbar-thumb {
+        @apply rounded-full bg-gym-300/70;
+    }
+
+    .chat-faq-btn {
+        @apply rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm leading-6 text-slate-700 transition hover:border-gym-300 hover:bg-gym-50 hover:text-gym-800 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .page-header {
+        @apply border-b border-slate-200 bg-white;
+    }
+
+    .page-header-inner {
+        @apply mx-auto max-w-5xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8;
+    }
+
+    .page-content {
+        @apply mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8;
+    }
+
+    .page-content-narrow {
+        @apply mx-auto w-full max-w-lg px-4 py-6 sm:px-6 sm:py-8 lg:px-8;
+    }
+
+    .mobile-tabs {
+        @apply flex gap-2 overflow-x-auto pb-1 -mx-1 px-1;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .mobile-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-tab {
+        @apply shrink-0 rounded-lg px-4 py-2.5 text-sm transition;
+    }
+
+    .table-scroll {
+        @apply -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-scroll table {
+        @apply min-w-[36rem];
+    }
+
+    .table-scroll-hint {
+        @apply mb-2 text-xs text-slate-400 sm:hidden;
+    }
+
+    .admin-page-header {
+        @apply mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .stat-grid {
+        @apply grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4;
+    }
+
+    .stat-item {
+        @apply rounded-xl border border-slate-100 bg-slate-50/80 p-3 text-center sm:bg-transparent sm:p-0 sm:text-start sm:border-0;
+    }
+
+    .exercise-card {
+        @apply rounded-xl border border-slate-200/80 bg-slate-50 p-4 sm:hidden;
+    }
+
+    .exercise-card-grid {
+        @apply mt-3 grid grid-cols-3 gap-2 text-center;
+    }
+
+    .exercise-card-stat {
+        @apply rounded-lg bg-white px-2 py-2;
+    }
+
+    .safe-fixed-bottom {
+        bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    @media (min-width: 640px) {
+        .safe-fixed-bottom {
+            bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+        }
+    }
+}
