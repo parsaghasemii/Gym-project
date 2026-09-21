@@ -22,19 +22,27 @@
             <p class="section-label">تغذیه روزانه</p>
             <div class="stat-grid mt-4">
                 <div class="stat-item">
-                    <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ number_format($program->nutrition->daily_calories) }}</p>
+                    <p class="text-xl sm:text-2xl font-bold text-slate-900">
+                        <x-persian-digits>{{ number_format($program->nutrition->daily_calories) }}</x-persian-digits>
+                    </p>
                     <p class="text-xs sm:text-sm text-slate-500">کالری</p>
                 </div>
                 <div class="stat-item">
-                    <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $program->nutrition->protein }}g</p>
+                    <p class="text-xl sm:text-2xl font-bold text-slate-900">
+                        <x-persian-digits>{{ $program->nutrition->protein }}g</x-persian-digits>
+                    </p>
                     <p class="text-xs sm:text-sm text-slate-500">پروتئین</p>
                 </div>
                 <div class="stat-item">
-                    <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $program->nutrition->carbs }}g</p>
+                    <p class="text-xl sm:text-2xl font-bold text-slate-900">
+                        <x-persian-digits>{{ $program->nutrition->carbs }}g</x-persian-digits>
+                    </p>
                     <p class="text-xs sm:text-sm text-slate-500">کربوهیدرات</p>
                 </div>
                 <div class="stat-item">
-                    <p class="text-xl sm:text-2xl font-bold text-slate-900">{{ $program->nutrition->fat }}g</p>
+                    <p class="text-xl sm:text-2xl font-bold text-slate-900">
+                        <x-persian-digits>{{ $program->nutrition->fat }}g</x-persian-digits>
+                    </p>
                     <p class="text-xs sm:text-sm text-slate-500">چربی</p>
                 </div>
             </div>
@@ -44,8 +52,12 @@
         @foreach ($program->days as $day)
             <div class="card">
                 <div class="mb-5">
-                    <h3 class="text-lg font-bold text-slate-900">{{ $day->day_name }}</h3>
-                    <p class="text-sm text-slate-500">{{ $day->focus_label }}</p>
+                    <h3 class="text-lg font-bold text-slate-900">
+                        <x-persian-digits>{{ $day->day_name }}</x-persian-digits>
+                    </h3>
+                    <p class="text-sm text-slate-500">
+                        <x-persian-digits>{{ $day->focus_label }}</x-persian-digits>
+                    </p>
                 </div>
 
                 <div class="space-y-6">
@@ -59,15 +71,21 @@
                                     <div class="exercise-card-grid">
                                         <div class="exercise-card-stat">
                                             <p class="text-xs text-slate-500">ست</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ $dayExercise->sets }}</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-900">
+                                                <x-persian-digits>{{ $dayExercise->sets }}</x-persian-digits>
+                                            </p>
                                         </div>
                                         <div class="exercise-card-stat">
                                             <p class="text-xs text-slate-500">تکرار</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ $dayExercise->reps }}</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-900">
+                                                <x-persian-digits>{{ $dayExercise->reps }}</x-persian-digits>
+                                            </p>
                                         </div>
                                         <div class="exercise-card-stat">
                                             <p class="text-xs text-slate-500">استراحت</p>
-                                            <p class="mt-1 text-sm font-semibold text-slate-900">{{ $dayExercise->rest_seconds }}ث</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-900">
+                                                <x-persian-digits>{{ $dayExercise->rest_seconds }}ث</x-persian-digits>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -88,9 +106,15 @@
                                     @foreach ($day->exercises as $dayExercise)
                                         <tr class="border-b border-slate-100">
                                             <td class="py-3 font-medium text-slate-900">{{ $dayExercise->exercise->name }}</td>
-                                            <td class="py-3">{{ $dayExercise->sets }}</td>
-                                            <td class="py-3">{{ $dayExercise->reps }}</td>
-                                            <td class="py-3">{{ $dayExercise->rest_seconds }} ثانیه</td>
+                                            <td class="py-3">
+                                                <x-persian-digits>{{ $dayExercise->sets }}</x-persian-digits>
+                                            </td>
+                                            <td class="py-3">
+                                                <x-persian-digits>{{ $dayExercise->reps }}</x-persian-digits>
+                                            </td>
+                                            <td class="py-3">
+                                                <x-persian-digits>{{ $dayExercise->rest_seconds }} ثانیه</x-persian-digits>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

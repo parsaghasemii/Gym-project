@@ -1,3 +1,7 @@
+@php
+    use App\Support\ValidationPresenter;
+@endphp
+
 <x-guest-layout>
     <div class="mb-6 text-center">
         <h1 class="text-xl font-bold text-slate-900">ورود</h1>
@@ -11,14 +15,14 @@
 
         <div>
             <x-input-label for="email" value="ایمیل" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" :has-error="ValidationPresenter::hasError($errors, 'email')" required autofocus autocomplete="username" />
+            <x-input-error field="email" class="mt-2" />
         </div>
 
         <div class="mt-4">
             <x-input-label for="password" value="رمز عبور" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" :has-error="ValidationPresenter::hasError($errors, 'password')" required autocomplete="current-password" />
+            <x-input-error field="password" class="mt-2" />
         </div>
 
         <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

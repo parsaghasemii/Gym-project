@@ -1,6 +1,6 @@
 <x-public-layout>
     {{-- Hero --}}
-    <section id="hero" class="relative overflow-hidden scroll-mt-20">
+    <section id="hero" class="relative overflow-hidden scroll-mt-4">
         <div class="absolute inset-0 bg-gradient-to-bl from-gym-950/5 via-transparent to-gym-500/5"></div>
         <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-28">
             <div class="grid gap-6 sm:gap-10 lg:gap-12 lg:grid-cols-2 lg:items-center">
@@ -91,11 +91,12 @@
                              :class="offset({{ $index }}) === 0 ? 'hero-feature-slide--active' : 'hero-feature-slide--inactive'"
                              :style="slideStyle({{ $index }})"
                              :aria-hidden="offset({{ $index }}) !== 0">
-                            <div class="mx-auto lg:mx-0 mb-2 sm:mb-3 lg:mb-0 flex h-9 w-9 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg sm:rounded-xl transition-colors duration-700"
-                                 :class="offset({{ $index }}) === 0 ? 'bg-gym-100 text-gym-600' : 'bg-slate-200 text-slate-400'">
-                                <svg class="h-4 w-4 sm:h-6 sm:w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $feature['icon'] !!}</svg>
+                            <div class="hero-feature-slide__icon-wrap transition-colors duration-700"
+                                 :class="offset({{ $index }}) === 0 ? 'hero-feature-slide__icon-wrap--active' : 'hero-feature-slide__icon-wrap--inactive'"
+                                 aria-hidden="true">
+                                <svg class="hero-feature-slide__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $feature['icon'] !!}</svg>
                             </div>
-                            <div>
+                            <div class="hero-feature-slide__content">
                                 <h3 class="font-semibold transition-colors duration-700"
                                     :class="offset({{ $index }}) === 0 ? 'text-slate-900' : 'text-slate-400'">
                                     {{ $feature['title'] }}
@@ -113,7 +114,7 @@
     </section>
 
     {{-- About --}}
-    <section id="about" class="border-t border-slate-200/80 bg-white scroll-mt-20">
+    <section id="about" class="border-t border-slate-200/80 bg-white scroll-mt-4">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
             <div class="max-w-3xl mx-auto lg:mx-0 text-center lg:text-start">
                 <p class="section-label mb-2 sm:mb-3">درباره پلتفرم</p>
@@ -131,76 +132,178 @@
     </section>
 
     {{-- Testimonials --}}
-    <section id="testimonials" class="border-t border-slate-200/80 bg-slate-50 overflow-hidden scroll-mt-20">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
-             x-data="{
-                active: 0,
-                total: 3,
-                goTo(index) {
-                    this.active = ((index % this.total) + this.total) % this.total;
-                },
-                next() { this.goTo(this.active + 1); },
-                prev() { this.goTo(this.active - 1); },
-             }">
+    @php
+        $testimonials = [
+            [
+                'quote' => 'برنامه تمرین و تغذیه‌ای که گرفتم واقعاً متناسب با شرایط من بود. توی ۴ هفته اول ۳ کیلو چربی کم کردم و انرژیم خیلی بیشتر شد. دیگه لازم نیست ساعت‌ها تو اینترنت بگردم.',
+                'name' => 'سارا محمدی',
+                'meta' => 'عضو ۲ ماهه',
+            ],
+            [
+                'quote' => 'قبلاً هر هفته برنامه‌ام رو از جاهای مختلف کپی می‌کردم و همیشه گیج می‌شدم. اینجا با چند تا سوال ساده split دقیق Upper/Lower گرفتم و توی دو ماه حجم عضلانی‌ام خیلی بهتر شد.',
+                'name' => 'امیر حسینی',
+                'meta' => 'عضو ۳ ماهه',
+            ],
+            [
+                'quote' => 'به‌عنوان تازه‌کار نمی‌دونستم از کجا شروع کنم. onboarding ساده بود و برنامه ۳ روزه‌ام دقیقاً همون چیزی بود که می‌خواستم — نه سنگین، نه سبک. واقعاً حس می‌کنم با برنامه جلو می‌رم.',
+                'name' => 'نرگس کاظمی',
+                'meta' => 'عضو ۱ ماهه',
+            ],
+            [
+                'quote' => 'هدفم کاهش وزن بود و توی ۶ هفته حدود ۴.۵ کیلو پایین اومدم بدون اینکه احساس کنم دارم خودمو از گرسنگی نابود می‌کنم. ماکروهای روزانه دقیقاً به درد زندگی واقعی‌ام خورد — نه یه عدد تئوری.',
+                'name' => 'رضا مرادی',
+                'meta' => 'عضو ۴ ماهه',
+            ],
+            [
+                'quote' => 'قبل از اینجا هر ماه برنامه‌ام رو عوض می‌کردم و پیشرفتی نداشتم. الان ۵ ماهه با همین سیستم جلو می‌رم و پرس سینه‌ام از ۶۰ به ۷۷.۵ کیلو رسیده. حس می‌کنم بالاخره یه مسیر منطقی پیدا کردم.',
+                'name' => 'مینا رضایی',
+                'meta' => 'عضو ۵ ماهه',
+            ],
+            [
+                'quote' => 'کارم پشت میز نشسته و وقت محدود دارم؛ برنامه ۴ روزه‌ام طوری چیده شده که هر جلسه زیر ۵۰ دقیقه تموم می‌شه. توی ۸ هفته کمردردم کمتر شده و انرژی بعدازظهرم اصلاً مثل قبل نیست.',
+                'name' => 'کوروش نیک‌پور',
+                'meta' => 'عضو ۲ ماهه',
+            ],
+            [
+                'quote' => 'بعد از چند سال رکود، فکر می‌کردم دیگه بدنم جواب نمی‌ده. توی ۳ ماه اول ۲ سانتی دور بازوم اضافه شد و لباس‌هام دوباره اندازه‌ام شد. برای من مهم این بود که برنامه واقعاً قابل اجرا باشه — و بود.',
+                'name' => 'لیلا احمدی',
+                'meta' => 'عضو ۶ ماهه',
+            ],
+        ];
+    @endphp
+
+    <section id="testimonials" class="border-t border-slate-200/80 bg-slate-50 overflow-hidden scroll-mt-4">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
             <div class="mb-8 sm:mb-10 text-center">
                 <p class="section-label mb-2 sm:mb-3">نظرات کاربران</p>
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">اعضا چی می‌گن؟</h2>
             </div>
 
-            <div class="relative mx-auto max-w-2xl px-2 sm:px-14">
-                {{-- dir=ltr keeps slide math reliable; each slide restores RTL text --}}
-                <div class="overflow-hidden rounded-2xl" dir="ltr">
-                    <div class="flex transition-transform duration-500 ease-in-out will-change-transform"
-                         :style="`transform: translateX(-${active * 100}%)`">
-                        <div class="w-full shrink-0 px-1" dir="rtl">
-                            <div class="card text-center">
-                                <svg class="mx-auto h-8 w-8 text-gym-200" fill="currentColor" viewBox="0 0 24 24"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/></svg>
-                                <p class="mt-4 text-sm sm:text-base text-slate-600 leading-7 sm:leading-8">
-                                    برنامه تمرین و تغذیه‌ای که گرفتم واقعاً متناسب با شرایط من بود. توی ۴ هفته اول ۳ کیلو چربی کم کردم و انرژیم خیلی بیشتر شد. دیگه لازم نیست ساعت‌ها تو اینترنت بگردم.
-                                </p>
-                                <p class="mt-5 font-semibold text-slate-900">سارا محمدی</p>
-                                <p class="mt-1 text-xs text-slate-500">عضو ۲ ماهه</p>
-                            </div>
-                        </div>
+            <div class="testimonial-slider"
+                 x-data="{
+                    active: 0,
+                    total: {{ count($testimonials) }},
+                    timer: null,
+                    touchStartX: 0,
+                    touchDeltaX: 0,
+                    windowWidth: window.innerWidth,
+                    isDesktop() { return this.windowWidth >= 768; },
+                    offset(index) {
+                        let diff = index - this.active;
+                        if (diff > 1) diff -= this.total;
+                        if (diff < -1) diff += this.total;
+                        return diff;
+                    },
+                    slideMetrics() {
+                        const w = this.windowWidth;
+                        if (w < 640) return { gap: 52, slideWidth: 80, inactiveScale: 0.68, inactiveOpacity: 0.7 };
+                        if (w < 1024) return { gap: 48, slideWidth: 66, inactiveScale: 0.70, inactiveOpacity: 0.68 };
+                        return { gap: 44, slideWidth: 58, inactiveScale: 0.72, inactiveOpacity: 0.65 };
+                    },
+                    slideStyle(index) {
+                        const diff = this.offset(index);
+                        const { gap, slideWidth, inactiveScale, inactiveOpacity } = this.slideMetrics();
+                        const scale = diff === 0 ? 1 : inactiveScale;
+                        const opacity = diff === 0 ? 1 : inactiveOpacity;
+                        return {
+                            width: `${slideWidth}%`,
+                            left: `calc(50% + ${diff * gap}%)`,
+                            transform: `translate(-50%, -50%) scale(${scale})`,
+                            opacity,
+                            zIndex: diff === 0 ? 2 : 1,
+                        };
+                    },
+                    goTo(index) {
+                        this.active = ((index % this.total) + this.total) % this.total;
+                        this.restartTimer();
+                    },
+                    next() { this.goTo(this.active + 1); },
+                    prev() { this.goTo(this.active - 1); },
+                    onTouchStart(event) {
+                        this.touchStartX = event.touches[0].clientX;
+                        this.touchDeltaX = 0;
+                        clearInterval(this.timer);
+                    },
+                    onTouchMove(event) {
+                        this.touchDeltaX = event.touches[0].clientX - this.touchStartX;
+                    },
+                    onTouchEnd() {
+                        const threshold = 40;
+                        if (this.touchDeltaX < -threshold) this.next();
+                        else if (this.touchDeltaX > threshold) this.prev();
+                        else this.restartTimer();
+                        this.touchDeltaX = 0;
+                    },
+                    restartTimer() {
+                        clearInterval(this.timer);
+                        this.timer = setInterval(() => this.next(), 7000);
+                    },
+                    init() {
+                        this.restartTimer();
+                        this._onResize = () => { this.windowWidth = window.innerWidth; };
+                        window.addEventListener('resize', this._onResize);
+                    },
+                    destroy() {
+                        clearInterval(this.timer);
+                        window.removeEventListener('resize', this._onResize);
+                    },
+                 }">
+                <div class="testimonial-slider__frame" dir="ltr">
+                    <button type="button"
+                            @click="prev()"
+                            class="testimonial-slider__nav"
+                            aria-label="نظر قبلی">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
 
-                        <div class="w-full shrink-0 px-1" dir="rtl">
-                            <div class="card text-center">
-                                <svg class="mx-auto h-8 w-8 text-gym-200" fill="currentColor" viewBox="0 0 24 24"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/></svg>
-                                <p class="mt-4 text-sm sm:text-base text-slate-600 leading-7 sm:leading-8">
-                                    قبلاً هر هفته برنامه‌ام رو از جاهای مختلف کپی می‌کردم و همیشه گیج می‌شدم. اینجا با چند تا سوال ساده split دقیق Upper/Lower گرفتم و توی دو ماه حجم عضلانی‌ام خیلی بهتر شد.
+                    {{-- dir=ltr keeps slide math reliable; each slide restores RTL text --}}
+                    <div class="testimonial-carousel"
+                         dir="ltr"
+                         @touchstart.passive="onTouchStart($event)"
+                         @touchmove.passive="onTouchMove($event)"
+                         @touchend="onTouchEnd()"
+                         aria-live="polite"
+                         aria-roledescription="carousel">
+                        @foreach ($testimonials as $index => $testimonial)
+                            <div class="testimonial-slide"
+                                 dir="rtl"
+                                 :class="[
+                                     offset({{ $index }}) === 0 ? 'testimonial-slide--active' : 'testimonial-slide--inactive',
+                                     offset({{ $index }}) !== 0 && isDesktop() ? 'cursor-pointer' : '',
+                                 ]"
+                                 :style="slideStyle({{ $index }})"
+                                 :aria-hidden="offset({{ $index }}) !== 0"
+                                 @click="isDesktop() && offset({{ $index }}) !== 0 && goTo({{ $index }})">
+                                <svg class="mx-auto h-8 w-8 transition-colors duration-700"
+                                     :class="offset({{ $index }}) === 0 ? 'text-gym-200' : 'text-slate-300'"
+                                     fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/>
+                                </svg>
+                                <p class="testimonial-slide__quote transition-colors duration-700"
+                                   :class="offset({{ $index }}) === 0 ? 'text-slate-600' : 'text-slate-400'">
+                                    {{ $testimonial['quote'] }}
                                 </p>
-                                <p class="mt-5 font-semibold text-slate-900">امیر حسینی</p>
-                                <p class="mt-1 text-xs text-slate-500">عضو ۳ ماهه</p>
-                            </div>
-                        </div>
-
-                        <div class="w-full shrink-0 px-1" dir="rtl">
-                            <div class="card text-center">
-                                <svg class="mx-auto h-8 w-8 text-gym-200" fill="currentColor" viewBox="0 0 24 24"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/></svg>
-                                <p class="mt-4 text-sm sm:text-base text-slate-600 leading-7 sm:leading-8">
-                                    به‌عنوان تازه‌کار نمی‌دونستم از کجا شروع کنم. onboarding ساده بود و برنامه ۳ روزه‌ام دقیقاً همون چیزی بود که می‌خواستم — نه سنگین، نه سبک. واقعاً حس می‌کنم با برنامه جلو می‌رم.
+                                <p class="testimonial-slide__name transition-colors duration-700"
+                                   :class="offset({{ $index }}) === 0 ? 'text-slate-900' : 'text-slate-400'">
+                                    {{ $testimonial['name'] }}
                                 </p>
-                                <p class="mt-5 font-semibold text-slate-900">نرگس کاظمی</p>
-                                <p class="mt-1 text-xs text-slate-500">عضو ۱ ماهه</p>
+                                <p class="testimonial-slide__meta transition-colors duration-700"
+                                   :class="offset({{ $index }}) === 0 ? 'text-slate-500' : 'text-slate-400'">
+                                    {{ $testimonial['meta'] }}
+                                </p>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
+
+                    <button type="button"
+                            @click="next()"
+                            class="testimonial-slider__nav"
+                            aria-label="نظر بعدی">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
 
-                <button type="button"
-                        @click="prev()"
-                        class="absolute top-1/2 -translate-y-1/2 left-0 z-10 hidden sm:flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-gym-300 hover:text-gym-600"
-                        aria-label="نظر قبلی">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <button type="button"
-                        @click="next()"
-                        class="absolute top-1/2 -translate-y-1/2 right-0 z-10 hidden sm:flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-gym-300 hover:text-gym-600"
-                        aria-label="نظر بعدی">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <div class="mt-6 flex justify-center gap-2">
+                <div class="testimonial-slider__dots">
                     <template x-for="i in total" :key="i">
                         <button type="button"
                                 @click="goTo(i - 1)"
@@ -215,7 +318,7 @@
     </section>
 
     {{-- Audience --}}
-    <section id="audience" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 scroll-mt-20">
+    <section id="audience" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 scroll-mt-4">
         <div class="mb-8 sm:mb-10 md:mb-12">
             <p class="section-label mb-2 sm:mb-3">مخاطب ما</p>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">به درد چه کسایی می‌خوره؟</h2>
@@ -246,7 +349,7 @@
     </section>
 
     {{-- Why us --}}
-    <section id="why-us" class="border-t border-slate-200/80 bg-slate-900 text-white scroll-mt-20">
+    <section id="why-us" class="border-t border-slate-200/80 bg-slate-900 text-white scroll-mt-4">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
             <div class="mb-8 sm:mb-10">
                 <p class="text-xs font-semibold uppercase tracking-wider text-gym-400 mb-2 sm:mb-3">چرا ما؟</p>

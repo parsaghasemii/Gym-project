@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\SplitType;
 use App\Models\MuscleGroup;
+use App\Support\PersianDate;
 use Illuminate\Support\Collection;
 
 class SplitSelector
@@ -37,7 +38,7 @@ class SplitSelector
         $daysList = [];
         for ($i = 1; $i <= $days; $i++) {
             $daysList[] = [
-                'day_name' => "روز {$i} — تمام بدن",
+                'day_name' => 'روز '.PersianDate::toPersianDigits((string) $i).' — تمام بدن',
                 'focus_label' => 'تمرین تمام بدن'.($focusSlugs ? ' (تاکید: '.implode('، ', $this->slugLabels($focusSlugs)).')' : ''),
                 'muscle_slugs' => $prioritized,
             ];

@@ -59,22 +59,38 @@ class AdminPanelTest extends TestCase
             ->assertSee('عضو نمونه');
     }
 
-    public function test_admin_can_create_meal(): void
+    public function test_admin_can_create_member_access(): void
     {
         $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)
-            ->post(route('admin.meals.store'), [
+            ->post(route('admin.members.store'), [
+                'name' => 'عضو جدید',
+                'email' => 'new-member@example.com',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+            ])
+            ->assertRedirect(route('admin.members.index'));
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'new-member@example.com',
+            'role' => 'member',
+        ]);
+    }
+
+    public function test_admin_cannot_create_meals(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->post('/admin/meals', [
                 'name' => 'صبحانه تست',
                 'meal_type' => 'breakfast',
                 'calories' => 400,
                 'protein' => 25,
                 'carbs' => 45,
                 'fat' => 12,
-                'description' => 'توضیح تست',
             ])
-            ->assertRedirect(route('admin.meals.index'));
-
-        $this->assertDatabaseHas('meals', ['name' => 'صبحانه تست']);
+            ->assertNotFound();
     }
 }

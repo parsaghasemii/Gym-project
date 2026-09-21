@@ -41,8 +41,10 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/exercises');
     Route::resource('exercises', AdminExerciseController::class)->except(['show']);
-    Route::resource('meals', AdminMealController::class)->except(['show']);
+    Route::get('meals', [AdminMealController::class, 'index'])->name('meals.index');
     Route::get('members', [AdminMemberController::class, 'index'])->name('members.index');
+    Route::get('members/create', [AdminMemberController::class, 'create'])->name('members.create');
+    Route::post('members', [AdminMemberController::class, 'store'])->name('members.store');
 });
 
 require __DIR__.'/auth.php';

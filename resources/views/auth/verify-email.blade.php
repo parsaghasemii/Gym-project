@@ -20,12 +20,10 @@
             </div>
         </form>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
+        <x-logout-form-target />
 
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
-            </button>
-        </form>
+        <x-logout-form variant="link">
+            {{ __('Log Out') }}
+        </x-logout-form>
     </div>
 </x-guest-layout>

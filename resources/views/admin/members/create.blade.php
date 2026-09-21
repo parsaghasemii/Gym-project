@@ -2,13 +2,14 @@
     use App\Support\ValidationPresenter;
 @endphp
 
-<x-guest-layout>
-    <div class="mb-6 text-center">
-        <h1 class="text-xl font-bold text-slate-900">ثبت‌نام</h1>
-        <p class="mt-1 text-sm text-slate-500">حساب جدید بسازید و شروع کنید</p>
+<x-admin-layout>
+    <div class="mb-6">
+        <p class="section-label">مدیریت</p>
+        <h1 class="text-2xl font-bold text-slate-900">ایجاد دسترسی کاربر</h1>
+        <p class="mt-1 text-sm text-slate-500">حساب عضو جدید بسازید تا بتواند وارد سایت شود.</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('admin.members.store') }}" class="card max-w-2xl">
         @csrf
 
         <div>
@@ -35,15 +36,9 @@
             <x-input-error field="password_confirmation" class="mt-2" />
         </div>
 
-        <div class="mt-6">
-            <x-primary-button class="w-full justify-center !py-3">
-                ثبت‌نام
-            </x-primary-button>
+        <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
+            <x-primary-button>ایجاد دسترسی</x-primary-button>
+            <a href="{{ route('admin.members.index') }}" class="btn-secondary">انصراف</a>
         </div>
-
-        <p class="mt-4 text-center text-sm text-slate-500">
-            قبلاً ثبت‌نام کردید؟
-            <a href="{{ route('login') }}" class="text-gym-600 hover:text-gym-700 font-medium">ورود</a>
-        </p>
     </form>
-</x-guest-layout>
+</x-admin-layout>

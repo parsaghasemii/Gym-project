@@ -8,34 +8,36 @@
     </div>
 
     <p class="table-scroll-hint">برای مشاهده کامل جدول، به چپ بکشید ←</p>
-    <div class="card table-scroll">
-        <table class="w-full text-sm text-right">
-            <thead>
-                <tr class="border-b border-slate-200 text-slate-500">
-                    <th class="py-2 font-medium">نام</th>
-                    <th class="py-2 font-medium">گروه عضلانی</th>
-                    <th class="py-2 font-medium">تجهیزات</th>
-                    <th class="py-2 font-medium">سطح</th>
-                    <th class="py-2 font-medium"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($exercises as $exercise)
-                    <tr class="border-b border-slate-100">
-                        <td class="py-3 font-medium">{{ $exercise->name }}</td>
-                        <td class="py-3">{{ $exercise->muscleGroup->name }}</td>
-                        <td class="py-3">{{ $exercise->equipment->label() }}</td>
-                        <td class="py-3">{{ $exercise->difficulty->label() }}</td>
-                        <td class="py-3 text-left">
-                            <a href="{{ route('admin.exercises.edit', $exercise) }}" class="text-gym-600 hover:underline">ویرایش</a>
-                        </td>
+    <div class="card admin-table-card">
+        <div class="table-scroll">
+            <table class="w-full text-sm text-right">
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>گروه عضلانی</th>
+                        <th>تجهیزات</th>
+                        <th>سطح</th>
+                        <th class="w-24"></th>
                     </tr>
-                @empty
-                    <tr><td colspan="5" class="py-8 text-center text-slate-500">حرکتی ثبت نشده است.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($exercises as $exercise)
+                        <tr>
+                            <td class="font-medium text-slate-900">{{ $exercise->name }}</td>
+                            <td>{{ $exercise->muscleGroup->name }}</td>
+                            <td>{{ $exercise->equipment->label() }}</td>
+                            <td>{{ $exercise->difficulty->label() }}</td>
+                            <td>
+                                <a href="{{ route('admin.exercises.edit', $exercise) }}" class="admin-table-action">ویرایش</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="py-10 text-center text-slate-500">حرکتی ثبت نشده است.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-4">{{ $exercises->links() }}</div>
+    <div class="mt-4">{{ $exercises->links('vendor.pagination.admin') }}</div>
 </x-admin-layout>
