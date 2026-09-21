@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "parsaghasemii/gym-project",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Persian RTL gym platform with rule-based workout and nutrition program generation.",
+    "keywords": ["laravel", "gym", "fitness", "rtl", "persian", "program-generator"],
     "license": "MIT",
     "require": {
         "php": "^8.3",

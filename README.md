@@ -1,25 +1,141 @@
-# Gym MVP — Laravel App
+# Gym Project — Persian Fitness Platform
 
-Persian RTL web application for a single gym: member registration, four-step onboarding, rule-based program generation (training + nutrition), and admin catalog management.
+[![CI](https://github.com/parsaghasemii/Gym-project/actions/workflows/ci.yml/badge.svg)](https://github.com/parsaghasemii/Gym-project/actions/workflows/ci.yml)
+[![PHP](https://img.shields.io/badge/PHP-8.3+-777BB4?logo=php&logoColor=white)](https://www.php.net/)
+[![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Requirements
+Persian RTL web platform for a single gym: member onboarding, rule-based **4-week workout + nutrition program generation**, member dashboard, and admin catalog management.
 
-- PHP 8.3+ with extensions: `mbstring`, `openssl`, `pdo_sqlite`, `sqlite3`, `xml`, `curl`
+Built as a product-style MVP — not a generic CRUD tutorial.
+
+---
+
+## Highlights
+
+| Area | What it demonstrates |
+|------|----------------------|
+| **Domain logic** | Rule-based program engine (split selection, equipment filtering, muscle-focus prioritization, Mifflin-St Jeor nutrition) |
+| **Product flow** | Landing → register → 4-step onboarding → auto-generated program → dashboard → profile edit → regenerate |
+| **UI/UX** | Full Persian RTL, IRANSans, responsive mobile layouts, design system, FAQ chat widget |
+| **Engineering** | Laravel 13, PHP 8.3 enums, service layer, middleware gates, 40+ automated tests, CI pipeline |
+| **Documentation** | Product spec, architecture diagram, setup guide, seeded demo data |
+
+---
+
+## Preview
+
+| Landing | Program | Admin |
+|---------|---------|-------|
+| ![Landing page preview](docs/assets/landing-preview.svg) | ![Program page preview](docs/assets/program-preview.svg) | ![Admin panel preview](docs/assets/admin-preview.svg) |
+
+> Replace these SVG previews with real screenshots/GIFs after deployment for maximum impact on recruiters.
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TB
+    subgraph Public
+        LP[Landing Page]
+        AUTH[Breeze Auth]
+    end
+
+    subgraph Member
+        ONB[4-Step Onboarding]
+        DASH[Dashboard]
+        PROG[Program View]
+        PROF[Fitness Profile]
+    end
+
+    subgraph Domain
+        GEN[ProgramGenerator]
+        NUT[NutritionCalculator]
+        SPL[SplitSelector]
+    end
+
+    subgraph Admin
+        EX[Exercise CRUD]
+        ME[Meal Catalog]
+        MEM[Member List]
+    end
+
+    LP --> AUTH
+    AUTH --> ONB
+    ONB --> GEN
+    GEN --> NUT
+    GEN --> SPL
+    GEN --> PROG
+    DASH --> PROG
+    PROF --> GEN
+    EX --> GEN
+    ME --> GEN
+```
+
+**Core flow:** onboarding collects profile data → `ProgramGenerator` selects split type, filters exercises by equipment/level, prioritizes muscle groups, calculates daily macros, persists a 4-week program aggregate.
+
+Full product spec: [`docs/gym.md`](docs/gym.md)
+
+---
+
+## Tech Stack
+
+- **Backend:** PHP 8.3, Laravel 13, Laravel Breeze (Blade)
+- **Frontend:** Tailwind CSS 3, Alpine.js, Vite 5
+- **Database:** SQLite (local dev; schema ready for MySQL)
+- **Testing:** PHPUnit, Laravel feature + integration tests
+- **Tooling:** Laravel Pint, GitHub Actions CI, Dependabot
+
+---
+
+## Features
+
+### Member
+- Persian RTL landing page with FAQ chat widget
+- Register / login / logout (email verification disabled in v1)
+- 4-step onboarding wizard with server-side validation
+- Automatic 4-week program generation (training + nutrition)
+- Dashboard with quick actions and program summary
+- Fitness profile edit + program regeneration
+
+### Admin
+- Exercise CRUD (muscle group, equipment, difficulty, sets/reps/rest)
+- Meal catalog (read-only list in v1)
+- Member list + create member accounts
+
+### Program Engine
+- Split types: Full Body (3d) · Upper/Lower (4d) · PPL + Focus (5d)
+- Equipment-aware exercise filtering
+- Fitness level difficulty gating
+- Muscle-focus volume prioritization
+- Mifflin-St Jeor BMR → TDEE → goal-adjusted macros
+
+---
+
+## Quick Start
+
+### Requirements
+
+- PHP 8.3+ (`mbstring`, `openssl`, `pdo_sqlite`, `sqlite3`, `xml`, `curl`)
 - Composer
-- Node.js 20+ (or Node 18 with the pinned Vite 5 toolchain in `package.json`)
-- SQLite (file database for local development)
+- Node.js 20+ (or Node 18 with the pinned Vite 5 toolchain)
+- SQLite
 
-Install the PHP SQLite extension on Ubuntu/Debian (recommended):
+Ubuntu/Debian:
 
 ```bash
 sudo apt install php8.3-sqlite3
 ```
 
-If you cannot install system packages yet, this repo ships a local fallback under `.php-ext/` used by `./serve.sh` and `./scripts/php.sh`.
+If system SQLite is unavailable, this repo includes a fallback under `.php-ext/` used by `./serve.sh` and `./scripts/php.sh`.
 
-## Setup
+### Setup
 
 ```bash
+git clone git@github.com:parsaghasemii/Gym-project.git
+cd Gym-project
+
 cp .env.example .env
 composer install
 php artisan key:generate
@@ -34,9 +150,9 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 Use `./serve.sh` instead of `php artisan serve` when the system PHP SQLite extension is missing.
 
-## Admin account
+### Demo Admin
 
-Configure admin credentials in `.env` (never commit real passwords):
+Configure in `.env` (never commit real passwords):
 
 | Variable | Default |
 |----------|---------|
@@ -46,27 +162,68 @@ Configure admin credentials in `.env` (never commit real passwords):
 
 Run `php artisan db:seed` to create or update the admin user.
 
+---
+
 ## Testing
-
-```bash
-./scripts/php.sh vendor/bin/phpunit
-```
-
-Or, if system PHP has SQLite enabled:
 
 ```bash
 php artisan test
 ```
 
-## Features
+Or with the local PHP fallback:
 
-- **Public:** Persian RTL landing page with FAQ chat widget
-- **Auth:** Breeze register / login / logout (email verification disabled)
-- **Onboarding:** Four-step wizard → automatic 4-week program generation
-- **Member area:** Dashboard, program view, fitness profile edit, program regeneration from current profile
-- **Admin:** CRUD for exercises and meals, read-only member list
-- **Program engine:** Split selection (Full Body / Upper-Lower / PPL+focus), equipment & level filtering, muscle-focus prioritization, Mifflin-St Jeor nutrition
+```bash
+./scripts/php.sh vendor/bin/phpunit
+```
 
-## Project docs
+CI runs Pint (code style) + full test suite on every push to `main`.
 
-- Spec: [`docs/gym.md`](docs/gym.md)
+---
+
+## Project Structure
+
+```
+app/
+├── Enums/           # Domain enums (Equipment, Goal, SplitType, …)
+├── Http/
+│   ├── Controllers/ # Web + Admin controllers
+│   └── Middleware/  # Onboarding + admin gates
+├── Models/          # Eloquent models + relationships
+├── Services/        # ProgramGenerator, NutritionCalculator, SplitSelector
+└── Support/         # PersianDate, ValidationPresenter
+
+resources/views/     # Blade templates (RTL, component-based)
+tests/Feature/       # HTTP + integration tests
+tests/Unit/          # Unit tests for support classes
+docs/gym.md          # Product specification
+```
+
+---
+
+## Deployment Notes
+
+This MVP targets SQLite for local development. For production:
+
+1. Switch `DB_CONNECTION` to MySQL/PostgreSQL in `.env`
+2. Set `APP_ENV=production`, `APP_DEBUG=false`
+3. Run `php artisan migrate --force` and `npm run build`
+4. Configure a web server (Nginx/Apache) or use Laravel Forge / Railway / Render
+
+Suggested next step for portfolio impact: deploy a live demo and add the URL here.
+
+---
+
+## Roadmap (v2 ideas)
+
+- [ ] Live demo deployment
+- [ ] Meal admin CRUD
+- [ ] Injury-aware exercise exclusion
+- [ ] Progress tracking (weight logs, PR history)
+- [ ] Email verification + notifications
+- [ ] API layer for mobile app
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

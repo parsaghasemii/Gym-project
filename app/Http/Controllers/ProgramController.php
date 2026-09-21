@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Program;
 use App\Services\ProgramGenerator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use DateTimeInterface;
+use Illuminate\Support\Carbon;
 
 class PersianDate
 {
@@ -45,7 +46,7 @@ class PersianDate
         }
 
         if (is_string($date)) {
-            $date = \Illuminate\Support\Carbon::parse($date);
+            $date = Carbon::parse($date);
         }
 
         [$year, $month, $day] = self::toJalali(

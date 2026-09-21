@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use App\Models\User;
 use Database\Seeders\MuscleGroupSeeder;
@@ -91,6 +90,6 @@ class AdminPanelTest extends TestCase
                 'carbs' => 45,
                 'fat' => 12,
             ])
-            ->assertNotFound();
+            ->assertMethodNotAllowed();
     }
 }
