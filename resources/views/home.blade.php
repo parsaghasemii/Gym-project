@@ -1,6 +1,6 @@
 <x-public-layout>
     {{-- Hero --}}
-    <section id="hero" class="relative overflow-hidden scroll-mt-4">
+    <section id="hero" class="relative overflow-x-clip scroll-mt-4">
         <div class="absolute inset-0 bg-gradient-to-bl from-gym-950/5 via-transparent to-gym-500/5"></div>
         <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-28">
             <div class="grid gap-6 sm:gap-10 lg:gap-12 lg:grid-cols-2 lg:items-center">
@@ -64,13 +64,17 @@
                         },
                         slideStyle(index) {
                             const diff = this.offset(index);
-                            const isMobile = window.innerWidth < 640;
+                            const width = window.innerWidth;
+                            const isMobile = width < 640;
+                            const isTablet = width >= 640 && width < 1024;
                             const gap = isMobile ? 4.75 : 8;
                             const y = diff * gap;
-                            const scale = diff === 0 ? (isMobile ? 1 : 1.05) : (isMobile ? 0.9 : 0.88);
+                            const activeScale = isMobile ? 1 : (isTablet ? 1 : 1.02);
+                            const inactiveScale = isMobile ? 0.9 : (isTablet ? 0.92 : 0.88);
+                            const scale = diff === 0 ? activeScale : inactiveScale;
                             const opacity = diff === 0 ? 1 : (isMobile ? 0.45 : 0.38);
                             return {
-                                transform: `translateY(calc(-50% + ${y}rem)) scale(${scale})`,
+                                transform: `translate3d(0, calc(-50% + ${y}rem), 0) scale(${scale})`,
                                 opacity,
                                 zIndex: diff === 0 ? 30 : 20 - Math.abs(diff),
                             };

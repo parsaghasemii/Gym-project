@@ -4,7 +4,7 @@
         <h1 class="text-2xl font-bold text-slate-900">ویرایش حرکت</h1>
     </div>
 
-    <form method="POST" action="{{ route('admin.exercises.update', $exercise) }}" class="card max-w-2xl">
+    <form method="POST" action="{{ route('admin.exercises.update', $exercise) }}" enctype="multipart/form-data" class="card max-w-2xl">
         @csrf
         @method('PUT')
         @include('admin.exercises._form', ['exercise' => $exercise, 'muscleGroups' => $muscleGroups])

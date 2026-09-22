@@ -768,6 +768,29 @@
         @apply rounded-lg bg-white px-2 py-2;
     }
 
+    .exercise-gif-thumb {
+        @apply relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-slate-600 transition hover:border-gym-300 hover:bg-gym-50 hover:text-gym-700;
+    }
+
+    .exercise-gif-thumb__play {
+        @apply h-4 w-4;
+    }
+
+    .exercise-gif-lightbox__backdrop {
+        background-color: rgb(15 23 42 / 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    .exercise-gif-lightbox__close-bar {
+        @apply fixed top-4 end-4 z-[60] inline-flex items-center gap-2 rounded-full border border-white/20 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-lg transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-white/80;
+        top: calc(1rem + env(safe-area-inset-top, 0px));
+    }
+
+    .exercise-gif-lightbox__close-bar svg {
+        @apply h-5 w-5 shrink-0;
+    }
+
     .safe-fixed-bottom {
         bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
     }

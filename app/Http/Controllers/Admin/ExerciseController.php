@@ -9,6 +9,7 @@ use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ExerciseController extends Controller
@@ -29,8 +30,7 @@ class ExerciseController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $this->validateExercise($request);
-        Exercise::query()->create($validated);
+        Exercise::query()->create($this->validateExercise($request));
 
         return redirect()->route('admin.exercises.index')->with('status', 'حرکت اضافه شد.');
     }
@@ -44,13 +44,14 @@ class ExerciseController extends Controller
 
     public function update(Request $request, Exercise $exercise): RedirectResponse
     {
-        $exercise->update($this->validateExercise($request));
+        $exercise->update($this->validateExercise($request, $exercise));
 
         return redirect()->route('admin.exercises.index')->with('status', 'حرکت به‌روزرسانی شد.');
     }
 
     public function destroy(Exercise $exercise): RedirectResponse
     {
+        $this->deleteGif($exercise);
         $exercise->delete();
 
         return redirect()->route('admin.exercises.index')->with('status', 'حرکت حذف شد.');
@@ -59,9 +60,9 @@ class ExerciseController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function validateExercise(Request $request): array
+    private function validateExercise(Request $request, ?Exercise $exercise = null): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'muscle_group_id' => ['required', 'exists:muscle_groups,id'],
             'equipment' => ['required', 'in:'.implode(',', array_column(Equipment::cases(), 'value'))],
@@ -69,6 +70,25 @@ class ExerciseController extends Controller
             'default_sets' => ['required', 'integer', 'min:1', 'max:10'],
             'default_reps' => ['required', 'string', 'max:50'],
             'rest_seconds' => ['required', 'integer', 'min:30', 'max:300'],
+            'gif' => ['nullable', 'file', 'mimes:gif', 'max:5120'],
         ], ['required' => 'این فیلد الزامی است.']);
+
+        if ($request->hasFile('gif')) {
+            $this->deleteGif($exercise);
+            $validated['gif_path'] = $request->file('gif')->store('exercises', 'public');
+        }
+
+        unset($validated['gif']);
+
+        return $validated;
+    }
+
+    private function deleteGif(?Exercise $exercise): void
+    {
+        if ($exercise?->gif_path === null) {
+            return;
+        }
+
+        Storage::disk('public')->delete($exercise->gif_path);
     }
 }

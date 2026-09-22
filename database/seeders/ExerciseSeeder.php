@@ -7,12 +7,19 @@ use App\Enums\Equipment;
 use App\Models\Exercise;
 use App\Models\MuscleGroup;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class ExerciseSeeder extends Seeder
 {
+    /** @var array<string, array<string, mixed>>|null */
+    private ?array $fedbExercises = null;
+
     public function run(): void
     {
         $groups = MuscleGroup::query()->pluck('id', 'slug');
+        /** @var array<string, array{type: string, name?: string, id?: string}> $mediaSources */
+        $mediaSources = require database_path('seeders/data/exercise-media-sources.php');
 
         $exercises = [
             // Chest
@@ -65,14 +72,141 @@ class ExerciseSeeder extends Seeder
         ];
 
         foreach ($exercises as $exercise) {
+            $mediaPath = isset($mediaSources[$exercise['name']])
+                ? $this->publishExerciseMedia($mediaSources[$exercise['name']])
+                : null;
+
             Exercise::query()->updateOrCreate(
                 ['name' => $exercise['name']],
                 [
                     ...$exercise,
                     'equipment' => $exercise['equipment']->value,
                     'difficulty' => $exercise['difficulty']->value,
+                    'gif_path' => $mediaPath,
                 ],
             );
         }
+    }
+
+    /**
+     * @param  array{type: string, name?: string, id?: string}  $source
+     */
+    private function publishExerciseMedia(array $source): ?string
+    {
+        return match ($source['type']) {
+            'fedb' => $this->publishFedbVideo($source['name'] ?? ''),
+            'exercisedb' => $this->publishExerciseGif($source['id'] ?? ''),
+            default => null,
+        };
+    }
+
+    private function publishFedbVideo(string $exerciseName): ?string
+    {
+        $fedbExercise = $this->findFedbExercise($exerciseName);
+
+        if ($fedbExercise === null) {
+            return null;
+        }
+
+        $gender = isset($fedbExercise['videos']['male']) ? 'male' : 'female';
+        $videoUrl = $fedbExercise['videos'][$gender] ?? null;
+
+        if ($videoUrl === null) {
+            return null;
+        }
+
+        $filename = basename(parse_url($videoUrl, PHP_URL_PATH) ?: '');
+        $storagePath = "exercises/{$gender}/{$filename}";
+
+        if (Storage::disk('public')->exists($storagePath)) {
+            return $storagePath;
+        }
+
+        $response = Http::withUserAgent('GymApp/1.0 (local seed)')
+            ->timeout(120)
+            ->get($videoUrl);
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        Storage::disk('public')->put($storagePath, $response->body());
+
+        return $storagePath;
+    }
+
+    private function publishExerciseGif(string $exerciseId): ?string
+    {
+        if ($exerciseId === '') {
+            return null;
+        }
+
+        $assetPath = database_path("seeders/assets/exercises/{$exerciseId}.gif");
+
+        if (! file_exists($assetPath)) {
+            $response = Http::withUserAgent('GymApp/1.0 (local seed)')
+                ->timeout(60)
+                ->get("https://static.exercisedb.dev/media/{$exerciseId}.gif");
+
+            if (! $response->successful()) {
+                return null;
+            }
+
+            $storagePath = "exercises/{$exerciseId}.gif";
+            Storage::disk('public')->put($storagePath, $response->body());
+
+            return $storagePath;
+        }
+
+        $storagePath = "exercises/{$exerciseId}.gif";
+        Storage::disk('public')->put($storagePath, file_get_contents($assetPath));
+
+        return $storagePath;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function findFedbExercise(string $exerciseName): ?array
+    {
+        foreach ($this->fedbCatalogue() as $exercise) {
+            if (($exercise['name'] ?? null) === $exerciseName) {
+                return $exercise;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function fedbCatalogue(): array
+    {
+        if ($this->fedbExercises !== null) {
+            return $this->fedbExercises;
+        }
+
+        $cataloguePath = database_path('seeders/data/fedb-exercises.json');
+
+        if (! file_exists($cataloguePath)) {
+            $response = Http::withUserAgent('GymApp/1.0 (local seed)')
+                ->timeout(60)
+                ->get('https://raw.githubusercontent.com/harshvishu/free-exercise-db-with-videos/main/data/exercises.json');
+
+            if (! $response->successful()) {
+                $this->fedbExercises = [];
+
+                return $this->fedbExercises;
+            }
+
+            file_put_contents($cataloguePath, $response->body());
+        }
+
+        /** @var array<int, array<string, mixed>> $catalogue */
+        $catalogue = json_decode(file_get_contents($cataloguePath), true) ?? [];
+        $this->fedbExercises = $catalogue;
+
+        return $this->fedbExercises;
     }
 }

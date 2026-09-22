@@ -224,6 +224,12 @@ Suggested next step for portfolio impact: deploy a live demo and add the URL her
 
 ---
 
+## Third-party assets
+
+Exercise demonstration GIFs in `database/seeders/assets/exercises/` are sourced from the free [ExerciseDB](https://oss.exercisedb.dev/docs) dataset (AscendAPI). Attribution is required for non-commercial use; see their license terms before commercial deployment.
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

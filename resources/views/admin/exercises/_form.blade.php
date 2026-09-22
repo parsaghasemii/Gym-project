@@ -49,4 +49,20 @@
             <x-text-input id="rest_seconds" name="rest_seconds" type="number" class="mt-1 block w-full" :value="old('rest_seconds', $exercise?->rest_seconds ?? 90)" required />
         </div>
     </div>
+
+    <div>
+        <x-input-label for="gif" value="GIF حرکت" />
+        <input
+            id="gif"
+            name="gif"
+            type="file"
+            accept="image/gif"
+            class="mt-1 block w-full text-sm text-slate-600 file:me-4 file:rounded-lg file:border-0 file:bg-gym-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gym-700 hover:file:bg-gym-100"
+        />
+        <p class="mt-1 text-xs text-slate-500">فقط GIF، حداکثر ۵ مگابایت.</p>
+        @if ($exercise?->hasGif())
+            <p class="mt-2 text-xs text-slate-600">GIF فعلی ذخیره شده است. آپلود جدید، قبلی را جایگزین می‌کند.</p>
+        @endif
+        <x-input-error :messages="$errors->get('gif')" class="mt-2" />
+    </div>
 </div>

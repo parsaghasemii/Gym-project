@@ -67,7 +67,10 @@
                         <div class="space-y-3 sm:hidden">
                             @foreach ($day->exercises as $dayExercise)
                                 <div class="exercise-card">
-                                    <p class="font-medium text-slate-900">{{ $dayExercise->exercise->name }}</p>
+                                    <div class="flex items-center gap-3">
+                                        <x-exercise-gif-thumb :exercise="$dayExercise->exercise" />
+                                        <p class="font-medium text-slate-900">{{ $dayExercise->exercise->name }}</p>
+                                    </div>
                                     <div class="exercise-card-grid">
                                         <div class="exercise-card-stat">
                                             <p class="text-xs text-slate-500">ست</p>
@@ -96,6 +99,7 @@
                             <table class="w-full text-sm text-right">
                                 <thead>
                                     <tr class="border-b border-slate-200 text-slate-500">
+                                        <th class="py-2 w-14 font-medium text-gym-600">نمایش</th>
                                         <th class="py-2 font-medium">حرکت</th>
                                         <th class="py-2 font-medium">ست</th>
                                         <th class="py-2 font-medium">تکرار</th>
@@ -105,6 +109,9 @@
                                 <tbody>
                                     @foreach ($day->exercises as $dayExercise)
                                         <tr class="border-b border-slate-100">
+                                            <td class="py-3">
+                                                <x-exercise-gif-thumb :exercise="$dayExercise->exercise" />
+                                            </td>
                                             <td class="py-3 font-medium text-slate-900">{{ $dayExercise->exercise->name }}</td>
                                             <td class="py-3">
                                                 <x-persian-digits>{{ $dayExercise->sets }}</x-persian-digits>
@@ -145,5 +152,7 @@
                 </div>
             </div>
         @endforeach
+
+        <x-exercise-gif-lightbox />
     </div>
 </x-app-layout>
