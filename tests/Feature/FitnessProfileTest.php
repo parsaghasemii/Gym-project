@@ -23,10 +23,10 @@ class FitnessProfileTest extends TestCase
         $this->seed(MuscleGroupSeeder::class);
     }
 
-    public function test_onboarded_member_can_update_fitness_profile(): void
+    public function test_onboarded_member_can_view_fitness_profile_read_only(): void
     {
         $user = User::factory()->onboarded()->create();
-        $muscleGroups = MuscleGroup::query()->take(2)->pluck('id')->all();
+        $muscleGroups = MuscleGroup::query()->take(2)->get();
 
         UserProfile::query()->create([
             'user_id' => $user->id,
@@ -38,28 +38,35 @@ class FitnessProfileTest extends TestCase
             'goal' => Goal::WeightLoss,
             'days_per_week' => 3,
             'equipment' => Equipment::Home,
+            'injuries' => 'زانو',
         ]);
 
+        $user->muscleFocus()->sync($muscleGroups->pluck('id'));
+
+        $response = $this->actingAs($user)
+            ->get(route('fitness-profile.edit'))
+            ->assertOk();
+
+        $response->assertSee('اطلاعات ثبت‌شده در ساخت برنامه', false);
+        $response->assertSee(Goal::WeightLoss->label(), false);
+        $response->assertSee(Equipment::Home->label(), false);
+        $response->assertSee('زانو', false);
+
+        foreach ($muscleGroups as $group) {
+            $response->assertSee($group->name, false);
+        }
+
+        $response->assertDontSee('ذخیره تغییرات', false);
+        $response->assertDontSee('دریافت برنامه جدید', false);
+        $response->assertDontSee('name="age"', false);
+    }
+
+    public function test_fitness_profile_update_route_is_not_available(): void
+    {
+        $user = User::factory()->onboarded()->create();
+
         $this->actingAs($user)
-            ->patch(route('fitness-profile.update'), [
-                'age' => 26,
-                'gender' => Gender::Female->value,
-                'height' => 165,
-                'weight' => 58,
-                'fitness_level' => FitnessLevel::Intermediate->value,
-                'goal' => Goal::GeneralFitness->value,
-                'days_per_week' => 4,
-                'equipment' => Equipment::FullGym->value,
-                'injuries' => null,
-                'muscle_groups' => $muscleGroups,
-            ])
-            ->assertRedirect(route('fitness-profile.edit'))
-            ->assertSessionHas('status');
-
-        $user->refresh();
-
-        $this->assertEquals(58, $user->profile->weight);
-        $this->assertEquals(4, $user->profile->days_per_week);
-        $this->assertCount(2, $user->muscleFocus);
+            ->patch('/fitness-profile')
+            ->assertMethodNotAllowed();
     }
 }

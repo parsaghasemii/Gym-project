@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProgramGenerator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,26 +25,15 @@ class ProgramController extends Controller
         return view('program.show', compact('program'));
     }
 
-    public function regenerate(Request $request, ProgramGenerator $generator): RedirectResponse
+    public function regenerate(Request $request): RedirectResponse
     {
-        $user = $request->user()->load(['profile', 'muscleFocus']);
+        $user = $request->user();
 
-        if ($user->profile === null || ! $user->profile->isComplete() || $user->muscleFocus->isEmpty()) {
-            return redirect()
-                ->route('fitness-profile.edit')
-                ->with('error', 'برای ساخت برنامه جدید، ابتدا پروفایل ورزشی را کامل کنید.');
-        }
-
-        try {
-            $generator->generate($user);
-        } catch (\InvalidArgumentException) {
-            return redirect()
-                ->route('fitness-profile.edit')
-                ->with('error', 'اطلاعات پروفایل کافی نیست. لطفاً همه فیلدها را تکمیل کنید.');
-        }
+        $user->programs()->delete();
+        $user->update(['onboarding_completed' => false]);
 
         return redirect()
-            ->route('program.show')
-            ->with('status', 'برنامه جدید بر اساس پروفایل فعلی‌تان ساخته شد.');
+            ->route('onboarding.step1')
+            ->with('status', 'برنامه قبلی حذف شد. مراحل ساخت برنامه جدید را از اول تکمیل کنید.');
     }
 }

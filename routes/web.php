@@ -29,7 +29,6 @@ Route::middleware(['auth', 'onboarding.completed'])->group(function () {
     Route::get('/program', [ProgramController::class, 'show'])->name('program.show');
     Route::post('/program/regenerate', [ProgramController::class, 'regenerate'])->name('program.regenerate');
     Route::get('/fitness-profile', [FitnessProfileController::class, 'edit'])->name('fitness-profile.edit');
-    Route::patch('/fitness-profile', [FitnessProfileController::class, 'update'])->name('fitness-profile.update');
 });
 
 Route::middleware('auth')->group(function () {

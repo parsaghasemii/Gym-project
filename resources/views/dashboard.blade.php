@@ -57,8 +57,8 @@
                       action="{{ route('program.regenerate') }}"
                       class="mt-4 pt-4 border-t border-slate-100">
                     @csrf
-                    <p class="text-sm text-slate-600 mb-3">پروفایلت را در «پروفایل ورزشی» ویرایش کن، بعد برنامه جدید بگیر.</p>
-                    <x-confirm-toast message="برنامه فعلی غیرفعال می‌شود و بر اساس پروفایل فعلی‌تان برنامه جدید ساخته می‌شود. ادامه می‌دهید؟">
+                    <p class="text-sm text-slate-600 mb-3">با درخواست برنامه جدید، برنامه فعلی حذف می‌شود و مراحل ساخت برنامه از اول شروع می‌شود.</p>
+                    <x-confirm-toast message="برنامه فعلی کامل حذف می‌شود و از مرحله اول ساخت برنامه شروع می‌کنید. ادامه می‌دهید؟">
                         <x-slot:trigger>
                             <button type="button" x-on:click="open = true" class="btn-secondary !text-sm">
                                 درخواست برنامه جدید
